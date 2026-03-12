@@ -1,0 +1,47 @@
+# PAF Domain Pack Template
+# Copy this file and fill in domain-specific knowledge.
+# See methodology/PAF-Domain-Pack-Specification.md for field definitions.
+
+name: ""
+version: "0.1"
+captured_from: ""
+date: YYYY-MM-DD
+description: ""
+
+# P1: Additional intake questions for this domain
+intake_questions: []
+
+# P2: Additional requirement prompts by category
+# Valid categories: functional, data-model, integration, user-experience,
+#   security, operational, commercial, compliance
+requirement_prompts: {}
+#  functional:
+#    - "Question?"
+#  security:
+#    - "Question?"
+
+# P3: Additional sections to inject into document scaffolds
+# Keys are document types (lowercase, hyphenated)
+document_section_templates: {}
+#  functional_processes:
+#    - "Section heading"
+#  backend_architecture:
+#    - "Section heading"
+
+# P4: Additional quality checks for G5 (Cross-Document Consistency)
+quality_checks: []
+#  - description: "What to check"
+#    documents: ["doc-type-1", "doc-type-2"]
+#    check: "What must be consistent"
+
+# Domain glossary
+terminology: []
+#  - term: "Term Name"
+#    definition: "What it means in this domain"
+
+# P5/P6: Domain-specific tooling recommendations
+tooling_recommendations: []
+#  - capability: "what_it_does"
+#    recommended: "Tool Name"
+#    rationale: "Why"
+#    synergy: "How it pairs with other tools"

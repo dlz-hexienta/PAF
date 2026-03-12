@@ -1,0 +1,143 @@
+name: IT Service Management
+version: "1.0"
+captured_from: enterprise ITSM platform
+date: 2026-03-12
+description: >
+  Knowledge pack for AI-powered ITSM products — autonomous agents
+  that handle incidents, problems, changes, and service requests
+  within enterprise IT environments. Captured from a real platform
+  design process (22 documents, 312-task plan).
+
+intake_questions:
+  - "Does the product align with ITIL process areas? Which ones? (Incident, Problem, Change, Service Request, Knowledge, CMDB)"
+  - "What change authority model applies? (advisory / approval-required / autonomous)"
+  - "Are there maturity-gated capabilities — features unlocked by demonstrated competence?"
+  - "Does the product need to integrate with existing ITSM tools? (ServiceNow, Jira Service Management, BMC, Freshservice)"
+  - "Is there a human-in-the-loop requirement for high-risk actions?"
+  - "Does the product operate within client environments (on-prem/air-gapped) or as SaaS?"
+  - "Is there a marketplace or skill/plugin ecosystem?"
+
+requirement_prompts:
+  functional:
+    - "How does agent autonomy evolve over time? Is there a tier/maturity model?"
+    - "What triggers agent actions? (events, schedules, human requests, other agents)"
+    - "How are agent skills/capabilities packaged and distributed?"
+    - "What is the agent lifecycle? (install → configure → learn → operate → retire)"
+    - "How do agents communicate with each other? (direct, message bus, shared state)"
+    - "What channels do agents use to interact with humans? (Slack, Teams, Email, Web UI)"
+  data-model:
+    - "What memory layers does an agent have? (identity, context, experience, relationships, capability)"
+    - "How is agent state persisted? (embedded DB, external DB, hybrid)"
+    - "What is the skill hierarchy? (atomic actions → composed skills → workflows → playbooks)"
+  security:
+    - "How does the system defend against prompt injection in AI-generated actions?"
+    - "Is there an immutable audit trail requirement? Append-only? Hash-chained?"
+    - "Does the governance layer need to be architecturally separate from the runtime?"
+    - "What is the action risk classification model? (observe → inform → suggest → act)"
+    - "Does the operator (vendor) have zero-knowledge of client operational data?"
+  operational:
+    - "What sandbox model is used for code execution? (Deno, Firecracker, containers, none)"
+    - "How does the system handle agent-to-agent communication across trust boundaries?"
+    - "What is the deployment model? (single binary, modular, distributed/Kubernetes)"
+    - "How are upgrades handled? (all-at-once, rolling restart, blue-green)"
+  commercial:
+    - "Is there a license tier model? (essentials, professional, enterprise)"
+    - "Is there a control plane / data plane separation for fleet management?"
+    - "Does the marketplace support third-party publishers?"
+
+document_section_templates:
+  functional_processes:
+    - "Agent Lifecycle Management (install → configure → activate → learn → operate → pause → retire)"
+    - "Escalation Flows (autonomous → supervised → human-required, with timeout and fallback)"
+    - "Skill Hierarchy (runbooks → actions → subskills → skills → workflows → playbooks)"
+    - "Trigger Engine (event-driven, schedule-driven, human-initiated, agent-initiated)"
+    - "Channel Interaction Flows (inbound routing, outbound formatting, thread state, identity)"
+  backend_architecture:
+    - "Governance Layer (separate process, IPC protocol, fail-closed enforcement)"
+    - "Sandbox Pool (warm pool management, execution isolation, resource limits, cleanup)"
+    - "Memory System (multi-layer: role, organizational, episodic, collaborative, procedural)"
+    - "Agent Runtime (lifecycle state machine, LLM provider abstraction, tool registry)"
+    - "Uplink Client (control plane communication, license refresh, telemetry, catalog sync)"
+  security_architecture:
+    - "Prompt Injection Defense (governance backstop is deterministic, not AI-dependent)"
+    - "Zero-Knowledge Architecture (operator cannot access client operational data)"
+    - "Action Risk Classification (observe → inform → suggest → act-low → act-high)"
+    - "Autonomy Tier Enforcement (tier rules are hard constraints, not suggestions)"
+    - "Key Management (KMS integration, key rotation, encrypted memory layers)"
+  api_specification:
+    - "Agent Management Endpoints (CRUD, lifecycle transitions, logs, config, memory, triggers)"
+    - "Governance Endpoints (policies, audit trail, decision traces, replay, approvals)"
+    - "Skill Management Endpoints (list, search, install, approve, reload, updates)"
+    - "WebSocket Activity Stream (real-time events, subscription filters)"
+  ui_design:
+    - "Agent Dashboard (status cards, activity feed, health indicators)"
+    - "Governance Views (policy editor, audit log, decision trace viewer, replay)"
+    - "Skill Marketplace (catalog grid, detail view, install flow)"
+
+quality_checks:
+  - description: "Autonomy tier consistency"
+    documents: ["security-architecture", "api-specification", "backend-architecture", "functional-processes"]
+    check: "Tier definitions (A/B/C or equivalent) must match exactly across all documents — same names, same permissions, same constraints"
+  - description: "Agent memory layer consistency"
+    documents: ["root-architecture", "backend-architecture", "functional-processes"]
+    check: "Memory layer names, count, and descriptions must match everywhere they appear"
+  - description: "Governance separation enforcement"
+    documents: ["backend-architecture", "security-architecture"]
+    check: "Governance is documented as a separate process with its own binary, not embedded in the runtime"
+  - description: "Action risk classification consistency"
+    documents: ["security-architecture", "api-specification", "functional-processes"]
+    check: "Risk levels (observe/inform/suggest/act) match across all documents"
+  - description: "Skill hierarchy consistency"
+    documents: ["functional-processes", "api-specification", "backend-architecture"]
+    check: "Skill hierarchy levels match across all references"
+  - description: "Channel adapter interface consistency"
+    documents: ["backend-architecture", "functional-processes", "api-specification"]
+    check: "Channel adapter interface (inbound/outbound) is described consistently"
+
+terminology:
+  - term: "Autonomy Tier"
+    definition: "Classification of agent decision-making authority. Tier A = full autonomous, Tier B = supervised, Tier C = maturity-gated. Higher tiers unlock as the agent demonstrates competence."
+  - term: "Decision Trace"
+    definition: "Immutable record of an agent's reasoning chain — inputs, context, options considered, selected action, outcome. Stored for audit replay and governance review."
+  - term: "Skill"
+    definition: "A packaged unit of agent capability, installable from a marketplace or local registry. Contains instructions, required tools, and metadata."
+  - term: "Governance Layer"
+    definition: "Architecturally separate process that enforces policies (OPA/Rego), records audit trails (append-only, hash-chained), manages human escalation, and provides decision replay."
+  - term: "Warm Pool"
+    definition: "Pre-initialized sandbox instances kept ready for immediate use, reducing cold-start latency for agent code execution."
+  - term: "Uplink"
+    definition: "Outbound-only HTTPS polling connection from data plane to control plane. Carries telemetry, license refresh, catalog sync. Never exposes inbound ports."
+  - term: "Zero-Knowledge Architecture"
+    definition: "Design principle where the platform operator (vendor) architecturally cannot access client operational data — encryption keys are client-held, data never leaves client environment."
+  - term: "Fail-Closed"
+    definition: "Security posture where component failure defaults to denying actions rather than permitting them. If governance is unreachable, agents cannot act."
+  - term: "Channel"
+    definition: "Human interaction pathway (Slack, Teams, Email, Web UI). Distinct from MCP (tool integration) and A2A (agent-to-agent)."
+  - term: "Role vs Instance"
+    definition: "A Role is a marketplace blueprint (purchasable). An Agent Instance is a running deployment of a Role, configured for a specific organizational context."
+
+tooling_recommendations:
+  - capability: governance_policy_engine
+    recommended: OPA/Rego
+    rationale: "Non-Turing-complete, additive-only — policies can restrict but never override tier rules"
+    synergy: "Embedded as Go library (no network hop). Rego policies are version-controlled alongside code."
+  - capability: audit_trail
+    recommended: "Append-only table with hash chains (SHA-256)"
+    rationale: "Tamper-evident without external dependencies. Each record includes hash of previous record."
+    synergy: "Same DB engine as primary data store — no additional infrastructure."
+  - capability: sandbox_execution
+    recommended: "Deno isolates (single-node) / Firecracker (distributed)"
+    rationale: "Capability-based security model. Warm pool pattern for latency."
+    synergy: "Deno runs JS/TS — matches common skill authoring language. Firecracker shares Linux kernel."
+  - capability: channel_adapters
+    recommended: "Slack Bolt SDK, Microsoft Graph API, SMTP/IMAP"
+    rationale: "Enterprise collaboration platforms where ITSM agents interact with humans"
+    synergy: "Adapter pattern with shared internal interface — add channels without changing core."
+  - capability: agent_identity
+    recommended: "Per-role visual identity system (avatars, color coding)"
+    rationale: "Humans need to distinguish agent types in collaboration platforms"
+    synergy: "SVG avatars embedded in binary — works in air-gapped environments."
+  - capability: llm_provider_abstraction
+    recommended: "Provider interface with pluggable backends (OpenAI, Anthropic, Azure, local)"
+    rationale: "Enterprise clients have different AI infrastructure preferences and constraints"
+    synergy: "Interface defined once in Go, implementations share connection pooling and retry logic."
