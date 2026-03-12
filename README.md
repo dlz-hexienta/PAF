@@ -74,7 +74,28 @@ The highest tier triggered by any signal wins. You can override upward (never do
 
 ## Quick Start
 
-### Option A: Manual Process (No Tooling Required)
+### Option A: Claude Code Skills (Recommended)
+
+See **[HOW-TO-USE.md](HOW-TO-USE.md)** for the complete walkthrough — installation, what happens at each phase, domain packs, and re-entry.
+
+**Quick version:**
+
+```bash
+# Install into your project
+mkdir -p .claude/skills docs/paf
+cp -r /path/to/paf/skills/paf-* .claude/skills/
+cp -r /path/to/paf/{methodology,templates,domain-packs} docs/paf/
+```
+
+Then start a design engagement in Claude Code:
+
+```
+/paf-intake
+```
+
+The skills chain automatically: P1 intake → P2 requirements → P3 authoring → P4 QA → P5 planning → P6 execution. Each skill reads the methodology docs as its source of truth, asks questions one at a time, produces artifacts, and verifies exit gates before handing off.
+
+### Option B: Manual Process (No Tooling Required)
 
 Read the methodology documents in order:
 
@@ -85,23 +106,7 @@ Read the methodology documents in order:
 5. **[PAF-Tooling-Guide.md](methodology/PAF-Tooling-Guide.md)** — Select tools for your stack
 6. **[PAF-Domain-Pack-Specification.md](methodology/PAF-Domain-Pack-Specification.md)** — Capture and reuse domain knowledge
 
-Use the [templates](templates/) to scaffold your documents. Check the [ITSM example](examples/itsm-platform/) to see what each phase produces.
-
-### Option B: Claude Code Skills (Automated)
-
-If you use [Claude Code](https://docs.anthropic.com/en/docs/claude-code), copy the `skills/` directory into your project's `.claude/skills/` directory:
-
-```bash
-cp -r skills/paf-* /path/to/your-project/.claude/skills/
-```
-
-Then start a design engagement:
-
-```
-/paf-intake
-```
-
-The skills chain automatically: P1 intake → P2 requirements → P3 authoring → P4 QA → P5 planning → P6 execution. Each skill reads the methodology docs as its source of truth, asks questions one at a time, produces artifacts, and verifies exit gates before handing off.
+Use the [templates](templates/) to scaffold your documents.
 
 ---
 
@@ -110,6 +115,8 @@ The skills chain automatically: P1 intake → P2 requirements → P3 authoring �
 ```
 paf/
 ├── README.md                          # This file
+├── HOW-TO-USE.md                      # Step-by-step usage guide (automated path)
+├── CLAUDE.md                          # Instructions for Claude Code instances
 │
 ├── methodology/                       # Layer 1: The Methodology
 │   ├── PAF-Overview.md                # Entry point — architecture, tiers, lifecycle
@@ -141,16 +148,9 @@ paf/
 │   ├── paf-plan/SKILL.md              # P5: Component extraction, sprint grouping, TDD tasks
 │   └── paf-execute/SKILL.md           # P6: Execution guardrails, design feedback loop
 │
-├── domain-packs/                      # Layer 3: Domain Knowledge
-│   ├── _template.yaml                 # Empty scaffold for new domain packs
-│   └── itsm.yaml                      # IT Service Management domain pack
-│
-└── examples/                          # Worked Examples
-    └── itsm-platform/                 # T3 enterprise ITSM platform (proof case)
-        ├── README.md                  # What PAF produced for this product
-        ├── intake-brief.md            # P1 output: core identity + complexity signals
-        ├── decision-record.md         # P2 output: sample decision entries
-        └── document-index.md          # P3 output: 22-document corpus index
+└── domain-packs/                      # Layer 3: Domain Knowledge
+    ├── _template.yaml                 # Empty scaffold for new domain packs
+    └── itsm.yaml                      # IT Service Management domain pack
 ```
 
 ---
@@ -222,22 +222,15 @@ Domain packs are YAML files that encode domain-specific knowledge, making PAF sm
 
 ---
 
-## Worked Example: ITSM Platform
+## Proof Case: ITSM Platform
 
-The [examples/itsm-platform/](examples/itsm-platform/) directory contains artifacts from the first product designed with PAF — a T3 enterprise agentic AI gateway for autonomous ITSM agents. This serves as the reference for what each phase produces.
+PAF was validated by designing a T3 enterprise agentic AI gateway for autonomous ITSM agents. Results:
 
-**Results:**
-- 22 design documents across 2 architectural planes (Data Plane + Control Plane)
-- 61,000+ lines of internally consistent specification
+- 22 design documents across 2 architectural planes (61,000+ lines)
 - 2 canonical OpenAPI 3.1 specs (155 endpoints, 138 schemas)
 - 312-task implementation plan across 37 sprints
-- Zero cross-document contradictions (verified by 8 consistency checks)
+- Zero cross-document contradictions (verified by 8 quality gates)
 - 64/64 design tokens consistent across all UI documents
-
-**Included artifacts:**
-- [Intake Brief](examples/itsm-platform/intake-brief.md) — P1 output showing complexity assessment
-- [Decision Record](examples/itsm-platform/decision-record.md) — P2 output showing the decision format
-- [Document Index](examples/itsm-platform/document-index.md) — P3 output showing the full corpus
 
 ---
 
