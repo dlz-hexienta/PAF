@@ -130,6 +130,14 @@ Use `superpowers:finishing-a-development-branch` to complete the work:
 - [ ] Domain pack updated with execution learnings
 - [ ] **Declaration: "Product is deliverable"**
 
+## When Things Go Wrong
+
+- **Test fails and fix requires design change:** Classify as Level 1 (minor), Level 2 (significant), or Level 3 (scope change) per §4 above. Don't skip the design feedback loop — silent drift compounds.
+- **Implementation reveals missing design section:** Pause the task. Author the missing section following P3 procedures, run relevant P4 gate, update the plan, then resume.
+- **Domain pack harvest produces no new knowledge:** This is fine — not every engagement teaches something new. Only add entries that would genuinely help the next product in this domain.
+- **Pre-release check fails:** Do not ship. Identify the failing check, trace it to the responsible task(s), fix, and re-run. Use `superpowers:systematic-debugging` if the issue is unclear.
+- **Context window limits during large corpus checks:** Batch design drift checks by domain or document layer. Check Layer 0–1 docs first, then Layer 2–3, then Layer 4.
+
 ## Related Skills
 
 Works well with: `paf-plan`, `superpowers:subagent-driven-development`, `superpowers:executing-plans`, `superpowers:using-git-worktrees`, `superpowers:finishing-a-development-branch`, `superpowers:verification-before-completion`

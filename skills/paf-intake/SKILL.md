@@ -83,9 +83,9 @@ If yes, suggest decomposition into sub-products. Each gets its own P1–P6 cycle
 
 ### 6. Produce Intake Brief
 
-Create the intake brief as a Markdown document. Save to the product's design directory.
+Create the intake brief as a Markdown document. Save to `docs/design/intake-brief.md`.
 
-Use the example at `docs/paf/examples/itsm-platform/intake-brief.md` as a formatting reference.
+Structure: Core Identity answers, Complexity Signals table with tier scoring, Scope Boundaries (v1/future/out-of-scope), and Domain Pack match (if any).
 
 ### 7. Exit Gate Checklist
 
@@ -97,8 +97,16 @@ Before handing off, verify:
 
 ### 8. Handoff
 
-Announce: "P1 complete. Invoking paf-requirements for Phase 2."
-Invoke the `paf-requirements` skill.
+Announce: "P1 complete." Present a summary of tier assignment and scope boundaries.
+Ask: "Ready to proceed to P2 (Requirements)? If you need time to review, you can resume later with `/paf-requirements`."
+Invoke `paf-requirements` only after confirmation.
+
+## When Things Go Wrong
+
+- **User can't answer a question:** Record as "TBD — needs stakeholder input" and continue. Flag at exit gate.
+- **Complexity signals conflict:** Use the highest tier triggered. If ambiguous, present the conflict and ask the user to decide.
+- **No domain pack matches:** Proceed without domain-specific questions. A pack may be captured during P2.
+- **User disagrees with tier assignment:** Allow upward override. If they want downward, explain the risk (missing documents → gaps caught late in P4 or execution).
 
 ## Related Skills
 

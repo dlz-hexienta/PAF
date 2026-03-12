@@ -16,7 +16,7 @@ This document defines the complete set of document types in a PAF design corpus 
 | **API Specification** | Endpoint definitions, request/response schemas, auth, versioning | Optional | Required | Required |
 | **Security Architecture** | Threat model, auth flows, RBAC, trust boundaries, data protection | Skip | Optional | Required |
 | **Operational** | Testing strategy, observability, release process, runbooks | Skip | Optional | Required |
-| **Decision Log** | Q&A-style decision record with rationale and distribution targets | Optional | Required | Required |
+| **Decision Log** | Q&A-style decision record with rationale and distribution targets | Required | Required | Required |
 | **Completeness Report** | Cross-document consistency audit, gap analysis, status promotion | Skip | Optional | Required |
 | **Design Library** | Document governance: frontmatter spec, naming convention, dependency graph, index | Skip | Skip | Required |
 | **Canonical Specs** | Machine-readable source of truth (OpenAPI, JSON Schema, DDL) | Skip | Optional | Required |
@@ -27,6 +27,8 @@ This document defines the complete set of document types in a PAF design corpus 
 - **Optional** — recommended but not gated; include if the product warrants it
 - **Skip** — unnecessary at this tier; adding it is overhead without value
 - **Required (if UI)** — required only when the product has a user interface
+
+**T1 note:** T1 products skip the Completeness Report. The P4 exit gate is satisfied by passing G1–G3 inline — no separate report document is needed. The Decision Log is required at all tiers because the D-{number} traceability chain is foundational to PAF's consistency guarantees.
 
 ---
 

@@ -41,11 +41,15 @@ your-project/
 │   ├── paf-qa/SKILL.md
 │   ├── paf-plan/SKILL.md
 │   └── paf-execute/SKILL.md
-└── docs/paf/
-    ├── methodology/          # Source of truth for all phases
-    ├── templates/            # Document scaffolds
-    └── domain-packs/         # Domain knowledge (YAML)
+├── docs/
+│   ├── paf/                      # PAF source (installed)
+│   │   ├── methodology/          # Source of truth for all phases
+│   │   ├── templates/            # Document scaffolds
+│   │   └── domain-packs/         # Domain knowledge (YAML)
+│   └── design/                   # ← Created by skills, your artifacts go here
 ```
+
+**For proprietary products:** Treat `docs/design/` as confidential — it will contain threat models, auth flows, and database schemas. See `docs/paf/methodology/PAF-Overview.md` §Security for guidance.
 
 ---
 
@@ -57,7 +61,9 @@ Open Claude Code in your project directory and run:
 /paf-intake
 ```
 
-That's it. The skill chain handles everything from here. Each phase asks questions, produces artifacts, verifies exit gates, and invokes the next phase automatically.
+That's it. The skill chain handles everything from here. Each phase asks questions, produces artifacts, verifies exit gates, and asks for your confirmation before proceeding to the next phase.
+
+All design artifacts are saved to `docs/design/` in your project (created automatically by the skills).
 
 ---
 
@@ -70,13 +76,13 @@ That's it. The skill chain handles everything from here. Each phase asks questio
 **If a domain pack matches** your product description, it loads additional domain-specific questions.
 
 **What it produces:**
-- Intake brief (saved to your design directory)
+- Intake brief (`docs/design/intake-brief.md`)
 - Complexity score and tier assignment (T1, T2, or T3)
 - Scope boundaries (v1 vs. future vs. out-of-scope)
 
 **What you review:** The tier assignment. You can override upward (never downward). If T3, it asks whether your product should be decomposed into sub-products.
 
-**Then:** Automatically invokes `paf-requirements`.
+**Then:** Asks for confirmation, then invokes `paf-requirements`.
 
 ---
 
@@ -98,12 +104,12 @@ That's it. The skill chain handles everything from here. Each phase asks questio
 | Compliance | — | — | If applicable |
 
 **What it produces:**
-- Decision log with `D-{number}` entries — each recording context, options, rationale, and which documents need this decision
+- Decision log (`docs/design/decision-log.md`) with `D-{number}` entries — each recording context, options, rationale, and which documents need this decision
 - Domain pack draft (if new domain-specific patterns were captured)
 
 **What you review:** Each decision as it's recorded. The "Distribute To" field on each decision — this is what makes decisions traceable through the design corpus.
 
-**Then:** Automatically invokes `paf-author`.
+**Then:** Asks for confirmation, then invokes `paf-author`.
 
 ---
 
@@ -121,11 +127,11 @@ Layer 4: Operational
 
 Each document cites decisions from P2 (e.g., "Per D-7, we use JWT with opaque API key fallback") and tracks shared contracts (design tokens, DB schema, API schemas, auth model, config) for cross-document consistency.
 
-**What it produces:** The full design document corpus — right-sized to your tier (3–5 docs for T1, 8–12 for T2, 15–25+ for T3).
+**What it produces:** The full design document corpus in `docs/design/` — right-sized to your tier (3–5 docs for T1, 8–12 for T2, 15–25+ for T3). T3 products split the Operational document into separate testing, observability, and release docs.
 
 **What you review:** Each document or layer as it completes. This is the most interactive phase — you'll confirm architecture decisions, UI layouts, API shapes, and security models as they're written.
 
-**Then:** Automatically invokes `paf-qa`.
+**Then:** Asks for confirmation, then invokes `paf-qa`.
 
 ---
 
@@ -148,11 +154,11 @@ If a domain pack matched, its domain-specific quality checks run as part of G5.
 
 **Resolution loop:** When a gate fails, the skill identifies the issue, fixes it, and re-runs the affected gate until it passes. Architectural changes get recorded as new decisions.
 
-**What it produces:** Completeness report with gate results, findings, and status promotions.
+**What it produces:** Completeness report (`docs/design/completeness-report.md`) with gate results, findings, and status promotions. For large corpora (T3, 15+ docs), G5 checks are batched by shared contract type to stay within context limits.
 
 **What you review:** The completeness report. Any findings that required architectural changes. Document status promotions (draft → review → approved).
 
-**Then:** Automatically invokes `paf-plan`.
+**Then:** Asks for confirmation, then invokes `paf-plan`.
 
 ---
 
@@ -182,11 +188,11 @@ Ref: {Design-Document §Section}
 | T2 | 40–80 | 6–12 |
 | T3 | 150–300+ | 15–40 |
 
-**What it produces:** Implementation plan with sprint structure, task decomposition, effort estimation (LOC, person-months, timelines, costs).
+**What it produces:** Implementation plan (`docs/design/implementation-plan.md`) with sprint structure, task decomposition, effort estimation (LOC, person-months, timelines, costs).
 
 **What you review:** Sprint grouping, dependency ordering, effort estimates. Every design section should map to at least one task and vice versa.
 
-**Then:** Waits for your confirmation, then invokes `paf-execute`.
+**Then:** Asks for confirmation, then invokes `paf-execute`.
 
 ---
 
@@ -265,7 +271,7 @@ Each skill checks its prerequisites (prior phase artifacts must exist) before pr
 If you paused after a phase and return later:
 
 1. Open Claude Code in your project directory
-2. The skills will find your existing artifacts in the design directory
+2. The skills will find your existing artifacts in `docs/design/`
 3. Invoke the next phase skill directly (e.g., `/paf-author` if you completed P2 last)
 4. The skill loads your intake brief, decision log, and tier assignment from the existing artifacts
 

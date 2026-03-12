@@ -19,7 +19,7 @@ P1 Intake → P2 Requirements → P3 Authoring → P4 QA → P5 Planning → P6 
 skill:       paf-intake  paf-requirements  paf-author  paf-qa  paf-plan  paf-execute
 ```
 
-Each skill produces artifacts, verifies exit gates, and hands off to the next. The phase guide (`methodology/PAF-Phase-Guide.md`) is the authoritative reference for each phase's procedures.
+Each skill produces artifacts in `docs/design/`, verifies exit gates, asks for user confirmation, then hands off to the next. The phase guide (`methodology/PAF-Phase-Guide.md`) is the authoritative reference for each phase's procedures.
 
 ## Complexity Tiers
 
@@ -71,6 +71,18 @@ Pack schema defined in `methodology/PAF-Domain-Pack-Specification.md`. Template 
 
 Decisions use `D-{number}` IDs with: Context, Options Considered, Decision (with reasoning), Distribute To (target documents), Version Gate (v1.0/future/out-of-scope).
 
-## Reference Example
+## Artifact Location
 
-`examples/itsm-platform/` — T3 platform that produced 22 documents, 155 API endpoints, 312-task plan with zero cross-document contradictions.
+All design artifacts are saved to `docs/design/` when installed in a project. Naming convention: `{product}-{document-type}.md` for design docs, plain type names for shared artifacts (intake-brief, decision-log, completeness-report, implementation-plan).
+
+## Error Handling
+
+Each skill has a "When Things Go Wrong" section covering common failure modes. Key principles:
+- Unanswerable questions → record as TBD, flag at exit gate
+- Gate fails 3+ times → escalate to user for architectural decision
+- Large corpus exceeds context → batch checks by shared contract type or domain
+- Missing templates → warn and scaffold manually from taxonomy descriptions
+
+## Security
+
+Design corpus may contain sensitive information (threat models, auth flows, schemas). For proprietary products, treat `docs/design/` as confidential. Domain packs must be anonymized before sharing. See `methodology/PAF-Overview.md` §Security.

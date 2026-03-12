@@ -8,6 +8,30 @@ For tooling recommendations, see [PAF-Tooling-Guide.md](PAF-Tooling-Guide.md).
 
 ---
 
+## Artifact Location Convention
+
+All PAF artifacts are saved to a `docs/design/` directory in the project root:
+
+```
+your-project/
+├── docs/
+│   ├── paf/                    # PAF source (methodology, templates, domain packs)
+│   └── design/                 # Design artifacts produced during P1–P6
+│       ├── intake-brief.md
+│       ├── decision-log.md
+│       ├── {product}-root-architecture.md
+│       ├── {product}-backend-architecture.md
+│       ├── ...
+│       ├── completeness-report.md
+│       └── implementation-plan.md
+```
+
+**Naming convention:** `{Product}-{Document-Type}.md` for design documents (e.g., `acme-backend-architecture.md`). Multi-domain products add the domain: `{Product}-{Domain}-{Document-Type}.md` (e.g., `acme-cp-backend-architecture.md`).
+
+**Shared artifacts** (intake brief, decision log, completeness report, implementation plan) use their type name directly without the product prefix.
+
+---
+
 ## P1: Intake & Scoping
 
 **Purpose:** Capture enough about a product idea to assess its complexity and determine how much process to apply.
@@ -206,6 +230,24 @@ If the product has multiple domains:
 
 See [PAF-Document-Taxonomy.md](PAF-Document-Taxonomy.md) §Multi-Domain Rule for naming conventions and cross-domain dependency tables.
 
+#### 3.6 Parallel Authoring (Teams of 3+)
+
+For T2+ products with multiple authors, authoring can be parallelized within constraints:
+
+**Safe to parallelize:**
+- Documents within the same dependency layer (e.g., Frontend Architecture and Backend Architecture are both Layer 2)
+- Domain-specific documents across different domains (e.g., DP-Backend and CP-Backend)
+
+**Must remain sequential:**
+- Documents across dependency layers (Layer 0 before Layer 1 before Layer 2)
+- The Decision Log (single source of truth — use a merge strategy or designate one author as the Decision Log owner)
+
+**Team coordination model:**
+1. Assign domain ownership — each author owns their domain's documents
+2. Designate a shared contract owner — one person resolves conflicts when schemas, auth models, or tokens differ between authors
+3. After each layer completes, run a sync checkpoint: all authors review each other's layer output before proceeding to the next layer
+4. Use git branching — each author works on their domain branch, merge at layer boundaries
+
 #### 3.6 Continuous Decision Log Updates
 
 The Decision Log is updated throughout P3 — new decisions will arise during authoring that weren't anticipated in P2. Record them in the same D-{number} format with "Distribute To" targets.
@@ -252,7 +294,16 @@ Execute each gate in order (see [PAF-Quality-Gates.md](PAF-Quality-Gates.md) for
 
 Create a Completeness Report documenting gate results, consistency findings, identified gaps, and status promotion recommendations. See [PAF-Quality-Gates.md](PAF-Quality-Gates.md) for the report template.
 
-#### 4.3 Resolution Loop
+#### 4.3 Large Corpus Strategy (T3, 15+ documents)
+
+When the design corpus is too large to process in a single pass:
+
+1. **Run G1–G3 first** — these are per-document checks that don't require cross-referencing
+2. **Batch G5 by shared contract type** — run Schema↔API checks, then Auth↔Everything, then Tokens↔Frontend, etc. Don't attempt all cross-document checks simultaneously
+3. **Use a contract registry** — before running G5, extract all shared contract values (design tokens, schema columns, auth roles, config keys) into a summary table. Check documents against the summary rather than re-reading the full defining document each time
+4. **Batch G6 by domain** — for multi-domain products, check bidirectional references within each domain first, then cross-domain references
+
+#### 4.4 Resolution Loop
 
 For each finding:
 1. Assign the finding to a specific document and section

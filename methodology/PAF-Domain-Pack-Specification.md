@@ -173,6 +173,36 @@ If a domain pack matched:
 
 ---
 
+## Validation
+
+Before committing or sharing a domain pack, verify the following:
+
+**Schema compliance:**
+- [ ] `name`, `version`, and `date` fields are present and non-empty
+- [ ] `version` is a quoted semver string (e.g., `"1.0"`, `"0.3"`)
+- [ ] `date` is valid ISO 8601 (YYYY-MM-DD)
+- [ ] YAML parses without error
+
+**Content quality:**
+- [ ] `intake_questions` entries are phrased as questions (end with `?`)
+- [ ] `requirement_prompts` entries are organized under valid category keys (functional, security, operational, etc.)
+- [ ] `quality_checks` entries have `description`, `documents`, and `check` fields, and checks are falsifiable (pass/fail, not subjective)
+- [ ] `terminology` entries have both `term` and `definition` fields
+
+**Anonymization (required before sharing/committing):**
+- [ ] `captured_from` does not contain client names — use generic descriptions (e.g., "enterprise ITSM platform")
+- [ ] No entries contain proprietary product names, internal codenames, or client-specific details
+- [ ] Terminology definitions describe domain-general concepts, not product-specific implementations
+- [ ] Quality checks reference document types, not specific document filenames
+
+**Completeness (optional but recommended):**
+- [ ] At least 3 intake questions that surface domain-specific complexity
+- [ ] Requirement prompts cover at least 2 categories
+- [ ] At least 1 quality check that catches a domain-specific consistency issue
+- [ ] At least 3 terminology entries for terms that have domain-specific meaning
+
+---
+
 ## Template
 
 An empty domain pack template is provided at `domain-packs/_template.yaml`:

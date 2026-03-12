@@ -18,8 +18,9 @@ tags: "paf, authoring, design-documents, scaffolding, design"
 
 ## Prerequisites
 
-- P2 exit gate passed (decision log exists, requirements captured)
+- P2 exit gate passed (decision log exists at `docs/design/decision-log.md`)
 - Know the assigned tier and matched domain pack (if any)
+- If a domain pack matched, load it from `docs/paf/domain-packs/{pack}.yaml`
 
 ## Procedure
 
@@ -42,7 +43,7 @@ For each required document, in dependency layer order:
    - Other `{filename}` references → actual filenames
 3. If a domain pack matched, read its `document_section_templates` for this category and inject additional sections into the scaffold
 4. Apply tier adjustments — remove sections marked for higher tiers (noted in template comments)
-5. Save the scaffold to the product's design directory
+5. Save the scaffold to `docs/design/{product}-{document-type}.md`
 
 ### 3. Author Documents in Layer Order
 
@@ -89,7 +90,18 @@ Incorporate feedback before proceeding to the next layer.
 
 New decisions will arise during authoring. Record them in the Decision Log using the same D-{number} format with "Distribute To" targets.
 
-### 6. Multi-Domain Authoring (T3)
+### 6. Operational Document Split (T3)
+
+Per the taxonomy, T3 products split the Operational document into 2–3 separate documents:
+- `{product}-testing-strategy.md` — test pyramid, CI/CD, coverage targets, performance benchmarks
+- `{product}-observability.md` — logging, metrics, tracing, alerting, SLI/SLO, dashboards
+- `{product}-release-process.md` — branching, quality gates, artifact signing, deployment checklist
+
+Scaffold each from the relevant sections of `docs/paf/templates/operational.md`. Each gets its own YAML frontmatter with `category: operational` and a distinguishing `tags` entry.
+
+T1–T2 products use a single `{product}-operational.md` document.
+
+### 7. Multi-Domain Authoring (T3)
 
 If the product has multiple domains:
 1. Author the primary domain's documents first (Layers 0–4)
@@ -97,7 +109,7 @@ If the product has multiple domains:
 3. Author shared/cross-cutting documents last
 4. Maintain a cross-domain dependency table
 
-### 7. Exit Gate Checklist
+### 8. Exit Gate Checklist
 
 - [ ] All required documents for the assigned tier exist at ≥ `draft`
 - [ ] All `depends_on` fields populated
@@ -106,10 +118,19 @@ If the product has multiple domains:
 - [ ] Decision Log updated with any P3 decisions
 - [ ] User has reviewed and approved each document/layer
 
-### 8. Handoff
+### 9. Handoff
 
-Announce: "P3 complete. Invoking paf-qa for Phase 4."
-Invoke the `paf-qa` skill.
+Announce: "P3 complete." Present a summary of documents authored and shared contracts identified.
+Ask: "Ready to proceed to P4 (Quality Assurance)? If you need time to review, you can resume later with `/paf-qa`."
+Invoke `paf-qa` only after confirmation.
+
+## When Things Go Wrong
+
+- **Template file missing:** Warn the user and scaffold manually from the document type description in PAF-Document-Taxonomy.md. Note the gap.
+- **Decision Log references a document type that doesn't exist at this tier:** Record the decision in the most relevant existing document. Note the mismatch.
+- **Contradictions found during self-check:** Fix immediately. If the contradiction stems from a P2 decision that needs revision, record a new decision (D-{next}) and update affected documents.
+- **Document too large for a single authoring pass:** Split into sections. Complete Layer N sections before moving to Layer N+1. Present each section for user review.
+- **Domain pack sections don't fit the product's architecture:** Skip irrelevant sections. Note which were skipped and why.
 
 ## Related Skills
 

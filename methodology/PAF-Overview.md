@@ -97,7 +97,32 @@ PAF was extracted from a real enterprise ITSM platform design process, which pro
 - **Zero cross-document contradictions** verified by 8 targeted consistency checks
 - **64/64 design tokens** consistent across all UI documents
 
-A worked example is available in `examples/itsm-platform/` as a reference for what each phase produces.
+This proof case validates that PAF's quality gates catch contradictions that would otherwise surface mid-sprint.
+
+---
+
+## Security of the Design Process
+
+The design corpus itself may contain sensitive information — threat models, authentication flows, database schemas, API keys patterns, and trust boundaries. Treat it accordingly.
+
+### For Proprietary Products
+
+- **Access control:** Restrict access to the design corpus repository. Security Architecture and Backend Architecture documents contain the most sensitive content.
+- **No secrets in documents:** Design documents describe security *mechanisms*, not credentials. Never include actual API keys, passwords, connection strings, or tokens. Use placeholders (e.g., `${DB_PASSWORD}`).
+- **Encrypted storage:** For regulated industries (healthcare, finance, government), store the design corpus in an encrypted repository or use encrypted-at-rest storage.
+
+### For Domain Packs
+
+- **Anonymize before sharing:** Domain packs must not contain client names, proprietary product names, or internal codenames. Use generic descriptions (e.g., "enterprise ITSM platform" not "Acme Corp HIVE").
+- **Review before committing:** Treat domain pack commits like code reviews. Check `terminology`, `quality_checks`, and `document_section_templates` for inadvertent proprietary details.
+- **Separate proprietary packs:** If a domain pack contains knowledge that cannot be anonymized, keep it in a private repository. Only share packs with domain-general knowledge.
+
+### Audit Trail
+
+For products in regulated industries:
+- Use git signed commits for all design document changes
+- Tag phase completion points (`p1-complete`, `p2-complete`, etc.) for audit traceability
+- Decision Log entries provide the rationale chain — ensure "Distribute To" links are maintained so auditors can trace from requirement → decision → design → implementation
 
 ---
 

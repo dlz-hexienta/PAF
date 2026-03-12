@@ -55,6 +55,8 @@ Work through requirement categories **in order**, asking questions one at a time
 
 ### 3. Decision Recording
 
+Save decisions to `docs/design/decision-log.md` using the template at `docs/paf/templates/decision-log.md`.
+
 For every significant decision, record it using this format:
 
 ```markdown
@@ -97,8 +99,16 @@ At the end of P2, if new domain knowledge was captured:
 
 ### 6. Handoff
 
-Announce: "P2 complete. Invoking paf-author for Phase 3."
-Invoke the `paf-author` skill.
+Announce: "P2 complete." Present a summary of decision count and categories explored.
+Ask: "Ready to proceed to P3 (Design Authoring)? If you need time to review, you can resume later with `/paf-author`."
+Invoke `paf-author` only after confirmation.
+
+## When Things Go Wrong
+
+- **User can't decide between options:** Record both options with trade-offs as a "pending" decision. Continue with other categories. Return before exit gate.
+- **Domain pack prompts don't fit the product:** Skip irrelevant prompts. Note the mismatch — it may indicate the wrong pack matched.
+- **Too many open questions remain:** Group them by criticality. Critical = blocks architecture. Non-critical = can be resolved during P3 authoring. Only critical questions block the exit gate.
+- **New complexity signals emerge:** If answers reveal higher complexity than P1 assessed, re-score the tier. Update intake brief.
 
 ## Related Skills
 

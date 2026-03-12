@@ -112,11 +112,11 @@ Produce an estimation appendix:
 - Timeline by team size (1, 2, 3-4, 5-6 developers)
 - Cost ranges (use PAF-Tooling-Guide.md rate references or market rates)
 
-Use `docs/paf/examples/itsm-platform/` as a reference example.
+Reference benchmarks: the ITSM proof case (T3) produced ~312 tasks across 37 sprints for 155 endpoints.
 
 ### 8. Save the Plan
 
-Save the implementation plan using the template at `docs/paf/templates/implementation-plan.md`.
+Save to `docs/design/implementation-plan.md` using the template at `docs/paf/templates/implementation-plan.md`.
 
 Use the `superpowers:writing-plans` skill format for task structure — that skill is the execution standard.
 
@@ -131,9 +131,16 @@ Use the `superpowers:writing-plans` skill format for task structure — that ski
 
 ### 10. Handoff
 
-Announce: "P5 complete. Plan saved to {path}. Ready to execute?"
+Announce: "P5 complete. Plan saved to `docs/design/implementation-plan.md`." Present a summary of task count, sprint count, and effort estimate.
+Ask: "Ready to proceed to P6 (Execution)? If you need time to review, you can resume later with `/paf-execute`."
+Invoke `paf-execute` only after confirmation.
 
-Invoke the `paf-execute` skill when the user confirms.
+## When Things Go Wrong
+
+- **Design section has no corresponding task:** Either add a task or justify why it's not buildable (e.g., it's rationale, not implementation). Document the justification.
+- **Dependency cycle detected:** Present the cycle to the user. One dependency must be broken — identify which component can use a stub/interface initially.
+- **Estimation seems unrealistic:** Cross-check against the ITSM proof case benchmarks (T3: ~312 tasks, ~37 sprints, ~155 endpoints). Adjust if the product's complexity differs.
+- **Task decomposition produces too many tasks:** Group related micro-tasks into composite tasks. Each composite should still be ≤1 day of work.
 
 ## Related Skills
 

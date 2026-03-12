@@ -70,7 +70,7 @@ Execute each required gate following the procedures in PAF-Quality-Gates.md:
 
 ### 3. Record Findings
 
-Use the completeness report template from `docs/paf/templates/completeness-report.md`. Fill in:
+Save to `docs/design/completeness-report.md` using the template from `docs/paf/templates/completeness-report.md`. Fill in:
 - Gate results table
 - Consistency findings table
 - Gaps identified table
@@ -103,8 +103,16 @@ Once all gates pass, promote document statuses:
 
 ### 7. Handoff
 
-Announce: "P4 complete — design corpus is implementation-ready. Invoking paf-plan for Phase 5."
-Invoke the `paf-plan` skill.
+Announce: "P4 complete — design corpus is implementation-ready." Present a summary of gate results and any findings resolved.
+Ask: "Ready to proceed to P5 (Implementation Planning)? If you need time to review, you can resume later with `/paf-plan`."
+Invoke `paf-plan` only after confirmation.
+
+## When Things Go Wrong
+
+- **Gate fails repeatedly on the same finding:** After 3 attempts, escalate to the user. The finding may require an architectural decision that should be recorded as a new D-{number} entry and flowed back through P3.
+- **Cross-document consistency check (G5) exceeds context:** For large corpora (15+ documents), batch G5 by shared contract type. Run Schema↔API first, then Auth↔Everything, etc. Don't attempt all checks in a single pass.
+- **Domain pack quality checks reference documents that don't exist:** Skip the check and note it in the completeness report. The domain pack may need updating.
+- **Finding requires scope change:** Pause P4, return to P2 for the affected requirement category, flow through P3 for affected documents only, then resume P4.
 
 ## Related Skills
 
