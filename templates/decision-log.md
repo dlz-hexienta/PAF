@@ -5,8 +5,10 @@ category: decision-log
 status: draft
 version: "0.1"
 date: {date}
-parent: "{root-architecture-filename}"
-depends_on: ["{root-architecture-filename}"]
+parent: ~
+depends_on: []
+# NOTE: Update parent and depends_on to point to the Root Architecture filename
+# once it is created during P3 (e.g., parent: "acme-root-architecture.md")
 tags: []
 ---
 
@@ -43,6 +45,14 @@ tags: []
 
 ---
 
+## Product Glossary
+
+<!-- [T2+] Define product-specific terms used across the design corpus. This is distinct from domain pack terminology (which is domain-general). Terms here ensure consistent naming in all documents. G5 checks terminology consistency against this table. -->
+
+| Term | Definition | Used In |
+|------|-----------|---------|
+| {term} | {precise definition in this product's context} | {list of documents using this term} |
+
 <!-- USAGE NOTES:
 - Number decisions sequentially (D-1, D-2, D-3...)
 - Always include "Distribute To" — this is what makes decisions traceable
@@ -50,4 +60,5 @@ tags: []
 - Reference decisions from target documents: "Per D-7, we use..."
 - New decisions discovered during P3 authoring are added here too
 - Decisions made during P6 execution (Design Feedback Loop) also go here
+- Glossary: add terms during P2 as they emerge; verify coverage during P4 (G5)
 -->

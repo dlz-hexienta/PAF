@@ -32,6 +32,39 @@ This is the concrete implementation validated by a real enterprise platform buil
 | Subagent dispatch | Claude Code Agent tool | Fresh context per task, parallel research |
 | Version control | Git + GitHub | Document versioning, branch isolation, PR-based review |
 | Document format | Markdown + YAML frontmatter | Portable, diffable, metadata-rich, tooling-friendly |
+| Diagram source | Mermaid (in Markdown fenced blocks) | Text-based, version-controllable, renders natively on GitHub and in IDEs |
+| Diagram rendering | mermaid-cli (`mmdc`) | Exports SVG/PNG from Mermaid source for offline viewing or embedding |
+
+### Diagram Rendering
+
+PAF diagrams are authored as Mermaid code blocks inside Markdown files. This keeps diagrams version-controllable and diffable alongside the design text.
+
+**Viewing diagrams:**
+
+| Context | How It Renders |
+|---------|---------------|
+| GitHub (web) | Natively — no setup needed |
+| VS Code | Install "Markdown Preview Mermaid Support" extension |
+| JetBrains IDEs | Built-in Mermaid support in Markdown preview |
+| Browser (quick preview) | Paste into [mermaid.live](https://mermaid.live) |
+| CLI (export to file) | `npx @mermaid-js/mermaid-cli mmdc -i input.md -o output.svg` |
+
+**Generating image files (optional):**
+
+For teams that want rendered diagram files alongside the Markdown source:
+
+```bash
+# Install mermaid-cli
+npm install -g @mermaid-js/mermaid-cli
+
+# Render all diagrams from a design document to SVG
+mmdc -i docs/design/acme-root-architecture.md -o docs/design/diagrams/root-architecture.svg
+
+# Render to PNG (for embedding in external docs)
+mmdc -i docs/design/acme-root-architecture.md -o docs/design/diagrams/root-architecture.png -b transparent
+```
+
+Rendered files go in `docs/design/diagrams/`. Add this directory to `.gitignore` if you prefer to regenerate on demand, or commit if your team needs offline access.
 
 ### API & Types
 
@@ -93,6 +126,8 @@ Tools aren't chosen in isolation. The highest-value tool decisions are **pairing
 | **YAML frontmatter + Grep/Glob** | Any tool can search and filter design documents by metadata fields. Enables automated quality gates |
 | **CSS Custom Properties + design tokens** | Tokens defined once in CSS variables, referenced everywhere. Runtime themeable, no build step for color changes |
 | **Markdown + Git** | Documents are diffable, reviewable in PRs, blame-able. Design decisions have the same version history as code |
+| **Mermaid + GitHub** | Diagrams render inline in PR diffs — reviewers see visual architecture changes alongside text changes, no separate tool needed |
+| **Mermaid + mmdc** | Source stays in Markdown (diffable), `mmdc` generates SVG/PNG for offline docs or presentations. One source, multiple outputs |
 
 ---
 

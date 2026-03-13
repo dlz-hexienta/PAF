@@ -56,6 +56,10 @@ These must stay consistent across documents — verified by gate G5:
 - API schemas (API Spec → Frontend/Backend)
 - Auth model (Security → API/Backend/Frontend)
 - Config schema (Backend → Functional/Operational)
+- Product glossary terms (Decision Log → All)
+- Quality attribute targets (Root Architecture §8 → Backend Architecture §9)
+- Architecture principles (Root Architecture §6 → Decision Log + all architecture docs)
+- Cross-cutting concerns (Root Architecture §11 → documents listed in Defined In / Enforced By)
 
 ## Domain Pack Lifecycle
 
@@ -69,11 +73,24 @@ Pack schema defined in `methodology/PAF-Domain-Pack-Specification.md`. Template 
 
 ## Decision Format
 
-Decisions use `D-{number}` IDs with: Context, Options Considered, Decision (with reasoning), Distribute To (target documents), Version Gate (v1.0/future/out-of-scope).
+Decisions use `D-{number}` IDs with: Context, Options Considered, Decision (with reasoning), Distribute To (target documents), Version Gate (v1.0/future/out-of-scope). Measurable targets use SMART criteria (Specific, Measurable, Achievable, Relevant, Time-bound). The Decision Log also holds a Product Glossary (T2+) for product-specific term definitions.
 
 ## Artifact Location
 
 All design artifacts are saved to `docs/design/` when installed in a project. Naming convention: `{product}-{document-type}.md` for design docs, plain type names for shared artifacts (intake-brief, decision-log, completeness-report, implementation-plan).
+
+## Diagrams
+
+Architecture diagrams use Mermaid syntax in Markdown fenced blocks. Diagram types scale by tier: T1 gets System Context only, T2 adds Component Interaction/Deployment/Sequence/State, T3 adds Data Flow and ER diagrams. Templates include Mermaid scaffolds with placeholders. Diagrams render natively on GitHub and in IDEs; for CLI export use `mmdc` (mermaid-cli). See `methodology/PAF-Tooling-Guide.md` §Diagram Rendering.
+
+## Root Architecture Sections
+
+The Root Architecture template has 15 sections. Key additions beyond basic product identity and tech stack:
+- §2 Stakeholders (T2+) — role, concern, which documents they review
+- §6 Architecture Principles — enduring rules guiding decisions (3–5 typical)
+- §8 Quality Attributes — measurable targets with priority (feeds Backend §9)
+- §11 Cross-Cutting Concerns — patterns applied system-wide, with Defined In / Enforced By traceability
+- §15 Risks & Technical Debt (T2+) — known risks with mitigation, intentional shortcuts with resolution plan
 
 ## Error Handling
 

@@ -44,6 +44,10 @@ tags: []
 | Tokens ↔ Frontend | {docs} | {result} | {detail} |
 | Config ↔ Docs | {docs} | {result} | {detail} |
 | Terminology ↔ All | {docs} | {result} | {detail} |
+| Glossary ↔ All | {docs} | {result} | {detail} |
+| Quality Attrs ↔ Impl | {docs} | {result} | {detail} |
+| Principles ↔ Decisions | {docs} | {result} | {detail} |
+| Cross-Cutting ↔ Refs | {docs} | {result} | {detail} |
 
 ---
 

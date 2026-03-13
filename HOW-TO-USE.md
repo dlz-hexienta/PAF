@@ -79,6 +79,7 @@ All design artifacts are saved to `docs/design/` in your project (created automa
 - Intake brief (`docs/design/intake-brief.md`)
 - Complexity score and tier assignment (T1, T2, or T3)
 - Scope boundaries (v1 vs. future vs. out-of-scope)
+- Stakeholder table (T2+ — who has a stake and what they care about)
 
 **What you review:** The tier assignment. You can override upward (never downward). If T3, it asks whether your product should be decomposed into sub-products.
 
@@ -105,7 +106,11 @@ All design artifacts are saved to `docs/design/` in your project (created automa
 
 **What it produces:**
 - Decision log (`docs/design/decision-log.md`) with `D-{number}` entries — each recording context, options, rationale, and which documents need this decision
+- Architecture principles (T2+ — recurring themes across decisions, 3–5 rules that guide the product)
+- Product glossary (T2+ — product-specific terms with definitions, checked for consistency in P4)
 - Domain pack draft (if new domain-specific patterns were captured)
+
+Measurable targets (performance, availability, capacity) use **SMART criteria** — Specific, Measurable, Achievable, Relevant, Time-bound — so they can be verified during implementation.
 
 **What you review:** Each decision as it's recorded. The "Distribute To" field on each decision — this is what makes decisions traceable through the design corpus.
 
@@ -127,6 +132,10 @@ Layer 4: Operational
 
 Each document cites decisions from P2 (e.g., "Per D-7, we use JWT with opaque API key fallback") and tracks shared contracts (design tokens, DB schema, API schemas, auth model, config) for cross-document consistency.
 
+Documents include **Mermaid diagrams** scaled by tier — system context diagrams for T1, plus component interaction, sequence, and state diagrams for T2, plus data flow and ER diagrams for T3. Diagrams are authored as text in Markdown and render visually on GitHub, in IDEs, or via export tools (see Diagrams section below).
+
+The **Root Architecture** document now includes stakeholders (T2+), architecture principles, quality attributes with measurable targets, cross-cutting concerns, and risks/technical debt — providing a complete high-level view in a single document.
+
 **What it produces:** The full design document corpus in `docs/design/` — right-sized to your tier (3–5 docs for T1, 8–12 for T2, 15–25+ for T3). T3 products split the Operational document into separate testing, observability, and release docs.
 
 **What you review:** Each document or layer as it completes. This is the most interactive phase — you'll confirm architecture decisions, UI layouts, API shapes, and security models as they're written.
@@ -145,18 +154,18 @@ Each document cites decisions from P2 (e.g., "Per D-7, we use JWT with opaque AP
 | G2 | Decision coverage (decisions → target docs) | Yes | Yes | Yes |
 | G3 | Taxonomy completeness (required docs exist) | Yes | Yes | Yes |
 | G4 | Internal consistency (no self-contradictions) | — | Yes | Yes |
-| G5 | Cross-document consistency (schema↔API, auth↔everything) | — | Yes | Yes |
-| G6 | Bidirectional references | — | — | Yes |
-| G7 | Version gate alignment | — | — | Yes |
+| G5 | Cross-document consistency (schema↔API, auth↔everything, glossary, principles, quality attrs, cross-cutting) | — | Yes | Yes |
+| G6 | Bidirectional references | — | Optional | Yes |
+| G7 | Version gate alignment | — | Optional | Yes |
 | G8 | Gap analysis (no TODOs, empty sections) | — | Yes | Yes |
 
 If a domain pack matched, its domain-specific quality checks run as part of G5.
 
 **Resolution loop:** When a gate fails, the skill identifies the issue, fixes it, and re-runs the affected gate until it passes. Architectural changes get recorded as new decisions.
 
-**What it produces:** Completeness report (`docs/design/completeness-report.md`) with gate results, findings, and status promotions. For large corpora (T3, 15+ docs), G5 checks are batched by shared contract type to stay within context limits.
+**What it produces:** T1: gate results presented inline (no separate report). T2+: completeness report (`docs/design/completeness-report.md`) with gate results, findings, and status promotions. For large corpora (T3, 15+ docs), G5 checks are batched by shared contract type to stay within context limits.
 
-**What you review:** The completeness report. Any findings that required architectural changes. Document status promotions (draft → review → approved).
+**What you review:** Gate results (T1: inline; T2+: completeness report). Any findings that required architectural changes. Document status promotions (draft → review → approved).
 
 **Then:** Asks for confirmation, then invokes `paf-plan`.
 
@@ -207,6 +216,7 @@ Ref: {Design-Document §Section}
 | Solo + AI | 1 developer | `superpowers:subagent-driven-development` |
 | Small Team | 2–4 developers | `superpowers:subagent-driven-development` or `superpowers:executing-plans` |
 | Full Team | 5+ developers | `superpowers:executing-plans` (parallel sessions) |
+| AI-Driven | AI-led, human reviews at phase boundaries | `superpowers:subagent-driven-development` with parallel agents |
 
 **PAF guardrails on top of execution:**
 - Per-task: tests pass, code matches design spec, no silent drift
@@ -215,7 +225,7 @@ Ref: {Design-Document §Section}
 
 **Design feedback loop:** When implementation reveals design issues:
 - Minor adjustments → update design doc inline
-- Significant deviations → new Decision Record entry, update affected docs, re-run relevant QA gate
+- Significant deviations → new Decision Log entry, update affected docs, re-run relevant QA gate
 - Scope changes → pause, return to P2 for that category, flow through P3→P4→P5, resume
 
 **Domain knowledge harvest:** At the end, the skill extracts domain-general patterns from all execution decisions and updates the domain pack — making PAF smarter for the next product in this domain.
@@ -298,6 +308,39 @@ After a full P1–P6 engagement:
 | **Implementation plan** | Sprint-structured TDD tasks with effort estimates |
 | **Working software** | Code matching the design, with tests passing |
 | **Updated domain pack** | Domain knowledge captured for reuse |
+
+---
+
+## Diagrams
+
+PAF uses **Mermaid** for architecture diagrams — text-based syntax embedded in Markdown files. This keeps diagrams version-controllable, diffable in PRs, and co-located with the design text.
+
+**How to view diagrams:**
+
+| Context | Renders automatically? |
+|---------|:-----:|
+| GitHub (viewing `.md` files) | Yes |
+| VS Code (with Mermaid extension) | Yes |
+| JetBrains IDEs | Yes |
+| Claude Code terminal | No — raw text |
+
+**For CLI-only workflows**, two options:
+- **Quick preview:** Paste the Mermaid block into [mermaid.live](https://mermaid.live)
+- **Export to files:** Install `mermaid-cli` and generate SVG/PNG:
+  ```bash
+  npm install -g @mermaid-js/mermaid-cli
+  mmdc -i docs/design/acme-root-architecture.md -o docs/design/diagrams/root-architecture.svg
+  ```
+
+**Diagram types by tier:**
+
+| Tier | Diagrams included |
+|------|------------------|
+| T1 | System Context |
+| T2 | + Component Interaction, Deployment Topology, Sequence, State |
+| T3 | + Data Flow, Entity-Relationship |
+
+See `docs/paf/methodology/PAF-Tooling-Guide.md` §Diagram Rendering for full details.
 
 ---
 

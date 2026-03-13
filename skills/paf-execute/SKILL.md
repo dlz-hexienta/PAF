@@ -22,19 +22,27 @@ tags: "paf, execution, delivery, review, domain-knowledge, design"
 
 - P5 exit gate passed (implementation plan exists and is approved)
 - All design documents at `approved` status
-- Execution mode selected
 
 ## Procedure
 
 ### 1. Select Execution Mode
 
-Based on team size and tier:
+Ask the user about team size and select the appropriate mode:
 
 | Mode | When | Execution Skill |
 |------|------|----------------|
 | **Solo + AI** | 1 developer, T1–T2 | `superpowers:subagent-driven-development` |
 | **Small Team** | 2–4 developers, T2–T3 | `superpowers:subagent-driven-development` or `superpowers:executing-plans` |
 | **Full Team** | 5+ developers, T3 | `superpowers:executing-plans` (parallel sessions) |
+| **AI-Driven** | AI-led with human review, any tier | `superpowers:subagent-driven-development` with parallel agents |
+
+**AI-Driven mode** is suitable when a single developer (or no dedicated developer) wants AI to execute the plan with minimal manual intervention. The AI:
+1. Works through tasks sequentially (or dispatches independent tasks to parallel agents)
+2. Writes tests and implementation per the TDD task structure
+3. Pauses at per-phase guardrail checkpoints for human review
+4. Flags any design drift for human classification (Level 1/2/3)
+
+For T3 products in AI-Driven mode, batch tasks by sprint phase and present integration results at each phase boundary. The human reviewer approves each phase before the next begins.
 
 ### 2. Workspace Setup
 
@@ -71,7 +79,7 @@ Implementation detail differs from spec (e.g., field name changed, slightly diff
 
 **Level 2 — Significant Deviation:**
 Architectural change, new component, or dropped feature.
-→ Create a new Decision Record entry (same D-{number} format).
+→ Create a new Decision Log entry (same D-{number} format).
 → Update all affected design documents.
 → Re-run the relevant P4 quality gate (just the affected checks, not full P4).
 
@@ -101,7 +109,7 @@ Use `superpowers:verification-before-completion` before claiming any check passe
 
 At the end of P6, before declaring completion:
 
-1. Read all Decision Record entries created during execution (Level 1–3 feedback)
+1. Read all Decision Log entries created during execution (Level 1–3 feedback)
 2. Identify patterns that are domain-general (not product-specific)
 3. Update the domain pack:
    - New `intake_questions` or `requirement_prompts` discovered

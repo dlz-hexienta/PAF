@@ -6,6 +6,8 @@ For document type details, see [PAF-Document-Taxonomy.md](PAF-Document-Taxonomy.
 For quality gate details, see [PAF-Quality-Gates.md](PAF-Quality-Gates.md).
 For tooling recommendations, see [PAF-Tooling-Guide.md](PAF-Tooling-Guide.md).
 
+**T1 fast-path note:** All 6 phases still apply at T1, but they are lightweight. P1 produces an intake brief in ~15 minutes. P2 explores 1–3 categories and records ~5–10 decisions. P3 authors 2–3 documents. P4 runs only G1–G3 inline (no separate completeness report). P5 produces 15–30 tasks. The full T1 cycle — intake through approved plan — typically completes in a single session.
+
 ---
 
 ## Artifact Location Convention
@@ -97,6 +99,7 @@ If yes to the first three and no to the last, decompose into sub-products. Each 
 - [ ] Intake brief complete (all core identity + complexity signal questions answered)
 - [ ] Complexity tier assigned and confirmed by stakeholder
 - [ ] Scope boundaries documented
+- [ ] Stakeholder table captured (T2+)
 - [ ] If T3: decomposition check passed (either single product confirmed or sub-products defined)
 
 ---
@@ -130,6 +133,15 @@ Work through requirement categories in the order below, scaled by tier:
 3. Record the chosen approach as a decision
 4. Tag downstream documents that need this decision
 
+**SMART criteria** — when a decision involves a measurable target (performance, capacity, availability, timeline), express it as:
+- **S**pecific — what exactly is being measured
+- **M**easurable — a number, threshold, or binary pass/fail
+- **A**chievable — within the product's constraints
+- **R**elevant — tied to a quality attribute or user need
+- **T**ime-bound — which version gate it applies to
+
+Example: Instead of "the API should be fast", record "API p95 latency < 200ms for v1.0 (per D-12)". This feeds Root Architecture §8 (Quality Attributes) and Backend Architecture §9 (Performance & Scaling).
+
 #### 2.2 Decision Recording
 
 Every significant decision follows this format:
@@ -161,14 +173,16 @@ At the end of P2, package these as a draft domain pack. See [PAF-Domain-Pack-Spe
 
 ### Artifacts
 
-- **Requirements Log** — structured requirements by category
-- **Decision Record** — all decisions in D-{number} format
+- **Decision Log** — all decisions in D-{number} format, plus product glossary (T2+)
 - **Domain Pack Draft** — captured domain knowledge (if new domain)
 
 ### Exit Gate
 
 - [ ] All required requirement categories explored (per tier table above)
 - [ ] Every decision has rationale and "Distribute To" targets
+- [ ] Measurable targets expressed as SMART criteria (if any)
+- [ ] Architecture principles captured (T2+, if they emerged)
+- [ ] Product glossary populated (T2+, if terms were defined)
 - [ ] No critical open questions remaining
 - [ ] Version gates assigned (v1 vs. future)
 - [ ] Domain pack draft reviewed (if new domain knowledge captured)
@@ -201,11 +215,25 @@ The scaffold includes: YAML frontmatter (pre-filled), section headings, and plac
 Write documents in dependency layer order (see [PAF-Document-Taxonomy.md](PAF-Document-Taxonomy.md) §Authoring Order). A document at Layer N must reach `draft` before any Layer N+1 document begins.
 
 For each document:
-1. **Fill sections** — reference decisions from the P2 Decision Record. Cite decisions explicitly (e.g., "Per D-7, we use...").
+1. **Fill sections** — reference decisions from the P2 Decision Log. Cite decisions explicitly (e.g., "Per D-7, we use...").
 2. **Cross-reference** — set the `depends_on` frontmatter field. If this document references a concept from another document, that document is a dependency.
 3. **Verify bidirectional references** — if document A depends on B, check whether B should also reference A. Justify one-way references.
 4. **Self-check** — read the document end-to-end. Are there contradictions? Placeholders? Undefined terms?
 5. **Set status** — mark as `draft` and move to the next document in layer order.
+
+**Diagram expectations by tier** — use Mermaid diagrams to visualize architecture and behavior:
+
+| Diagram Type | Where Used | T1 | T2 | T3 |
+|-------------|-----------|:---:|:---:|:---:|
+| System Context (`graph LR`) | Root Architecture §3 | Required | Required | Required |
+| Component Interaction (`graph TD`) | Root Architecture §3 | Skip | Required | Required |
+| Deployment Topology (`graph TD`) | Root Architecture §4 | Skip | Optional | Required |
+| Sequence diagrams | Functional Processes §3 | Skip | Required | Required |
+| State diagrams | Functional Processes §3, §4 | Skip | Required | Required |
+| Data flow diagrams | Functional Processes §6 | Skip | Skip | Required |
+| Entity-relationship | Backend Architecture §4 | Skip | Optional | Required |
+
+Templates include Mermaid scaffolds with placeholders — replace placeholders with actual names during authoring.
 
 #### 3.4 Shared Contracts
 
@@ -248,7 +276,7 @@ For T2+ products with multiple authors, authoring can be parallelized within con
 3. After each layer completes, run a sync checkpoint: all authors review each other's layer output before proceeding to the next layer
 4. Use git branching — each author works on their domain branch, merge at layer boundaries
 
-#### 3.6 Continuous Decision Log Updates
+#### 3.7 Continuous Decision Log Updates
 
 The Decision Log is updated throughout P3 — new decisions will arise during authoring that weren't anticipated in P2. Record them in the same D-{number} format with "Distribute To" targets.
 
@@ -264,6 +292,7 @@ The Decision Log is updated throughout P3 — new decisions will arise during au
 - [ ] All P2 decisions distributed to their target documents
 - [ ] Shared contracts identified and noted for P4 consistency checking
 - [ ] Decision Log updated with any P3 decisions
+- [ ] User has reviewed and approved each document/layer
 
 ---
 
@@ -292,7 +321,9 @@ Execute each gate in order (see [PAF-Quality-Gates.md](PAF-Quality-Gates.md) for
 
 #### 4.2 Record Findings
 
-Create a Completeness Report documenting gate results, consistency findings, identified gaps, and status promotion recommendations. See [PAF-Quality-Gates.md](PAF-Quality-Gates.md) for the report template.
+**T1:** Record G1–G3 results inline — no separate Completeness Report document is needed. Present pass/fail summary directly.
+
+**T2+:** Create a Completeness Report documenting gate results, consistency findings, identified gaps, and status promotion recommendations. See [PAF-Quality-Gates.md](PAF-Quality-Gates.md) for the report template.
 
 #### 4.3 Large Corpus Strategy (T3, 15+ documents)
 
@@ -436,6 +467,9 @@ Produce an effort estimation appendix covering:
 | **Solo + AI** | Single developer with AI-assisted development | T1–T2, founder-led |
 | **Small Team** | 2–4 developers with defined ownership | T2–T3, early-stage |
 | **Full Team** | 5+ developers with tech lead, PR workflow | T3, established teams |
+| **AI-Driven** | AI executes the plan autonomously, human reviews at phase boundaries | Any tier, minimal developer availability |
+
+**AI-Driven mode:** The AI works through the implementation plan — writing tests, implementing code, and committing per the TDD task structure. It pauses at per-phase guardrail checkpoints for human review and flags design drift for human classification. For T3 products, tasks are batched by sprint phase with integration results presented at each boundary. The human reviewer approves each phase before the next begins.
 
 #### 6.2 Follow Execution Principles
 
@@ -467,7 +501,7 @@ At the end of each sprint/phase:
 During execution, discoveries will require design changes:
 
 1. **Minor adjustments** (implementation detail differs from spec) — update the design document inline, note in commit message
-2. **Significant deviations** (architectural change, new component, dropped feature) — create a new Decision Record entry, update affected design documents, re-run relevant P4 quality gate
+2. **Significant deviations** (architectural change, new component, dropped feature) — create a new Decision Log entry, update affected design documents, re-run relevant P4 quality gate
 3. **Scope changes** (new requirements discovered) — return to P2 for that requirement category, flow through P3→P4→P5 for affected documents only
 
 #### 6.6 Pre-Release Quality Checks
@@ -484,7 +518,7 @@ During execution, discoveries will require design changes:
 #### 6.7 Domain Knowledge Harvest
 
 At the end of P6:
-1. Review all Decision Record entries created during execution
+1. Review all Decision Log entries created during execution
 2. Extract patterns useful for future products in this domain
 3. Update the domain pack with new questions, constraints, quality checks, terminology
 4. Version the domain pack

@@ -74,6 +74,8 @@ For every significant decision, record it using this format:
 
 The **"Distribute To"** field is mandatory — it's what makes decisions traceable. If you can't identify a target document, the decision may not be significant enough to record.
 
+**SMART targets:** When a decision involves a measurable target (performance, capacity, availability, timeline), express it as Specific, Measurable, Achievable, Relevant, Time-bound. Example: instead of "the API should be fast", record "API p95 latency < 200ms for v1.0". These feed Root Architecture §8 (Quality Attributes) and Backend Architecture §9 (Performance & Scaling).
+
 Save decisions to a Decision Log file in the product's design directory. Use the template at `docs/paf/templates/decision-log.md`.
 
 ### 4. Domain Knowledge Capture
@@ -89,15 +91,38 @@ At the end of P2, if new domain knowledge was captured:
 2. If creating a new pack: copy `docs/paf/domain-packs/_template.yaml` and fill in captured knowledge
 3. Present the draft pack to the user for review
 
-### 5. Exit Gate Checklist
+### 5. Principles & Glossary Capture
+
+As decisions accumulate, two additional artifacts emerge:
+
+**Architecture Principles (T2+):** Look for recurring themes across decisions — rules that guided multiple choices. Capture 3–5 principles as a table:
+
+| Principle | Rationale |
+|-----------|-----------|
+| {e.g., Single binary deployment} | {e.g., Reduces operational complexity} |
+
+These feed Root Architecture §6. Don't force principles — if only 1–2 emerge naturally, that's fine.
+
+**Product Glossary (T2+):** When a product-specific term is defined or clarified during discussion, add it to the glossary section of the Decision Log:
+
+| Term | Definition | Used In |
+|------|-----------|---------|
+| {term} | {definition in this product's context} | {target documents} |
+
+This is distinct from domain pack terminology (which is domain-general). G5 checks glossary terms for consistent usage.
+
+### 6. Exit Gate Checklist
 
 - [ ] All required requirement categories explored (per tier)
 - [ ] Every decision has rationale and "Distribute To" targets
+- [ ] Measurable targets expressed as SMART criteria (if any)
+- [ ] Architecture principles captured (T2+, if they emerged)
+- [ ] Product glossary populated (T2+, if terms were defined)
 - [ ] No critical open questions remaining
 - [ ] Version gates assigned (v1 vs. future)
 - [ ] Domain pack draft reviewed (if new domain knowledge)
 
-### 6. Handoff
+### 7. Handoff
 
 Announce: "P2 complete." Present a summary of decision count and categories explored.
 Ask: "Ready to proceed to P3 (Design Authoring)? If you need time to review, you can resume later with `/paf-author`."

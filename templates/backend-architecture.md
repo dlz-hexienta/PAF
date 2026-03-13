@@ -105,13 +105,34 @@ CREATE TABLE {name} (
 
 ---
 
-## 9. Performance Targets
+## 9. Performance & Scaling
 
-| Metric | Target |
-|--------|--------|
-| API response (p95) | {ms} |
-| Startup time | {seconds} |
-| Memory usage | {MB} |
+### Performance Targets
+
+| Metric | Target | Measured By |
+|--------|--------|-------------|
+| API response (p95) | {ms} | {e.g., middleware timer, APM} |
+| Startup time | {seconds} | {e.g., readiness probe} |
+| Memory usage | {MB} | {e.g., runtime metrics} |
+
+### Scaling Strategy
+
+<!-- [T2+] How does each component scale? What triggers scaling? -->
+
+| Component | Strategy | Trigger | Ceiling |
+|-----------|----------|---------|---------|
+| {e.g., API server} | {horizontal / vertical} | {e.g., CPU > 70%, queue depth > 100} | {e.g., 8 replicas} |
+| {e.g., Database} | {read replicas / sharding / vertical} | {e.g., connection pool > 80%} | {e.g., 1 primary + 3 read replicas} |
+
+### Capacity Planning
+
+<!-- [T3] Expected load and growth assumptions. Feeds operational monitoring thresholds. -->
+
+| Resource | v1.0 Target | Growth Assumption |
+|----------|-------------|-------------------|
+| {e.g., Concurrent users} | {number} | {e.g., 2x per quarter} |
+| {e.g., Storage} | {GB} | {e.g., +50GB/month} |
+| {e.g., Requests/sec} | {number} | {e.g., proportional to user growth} |
 
 ---
 
@@ -125,7 +146,7 @@ CREATE TABLE {name} (
 ---
 
 <!-- TIER GUIDANCE:
-T1: Sections 1-4, 6-7 required (if optional doc is included).
-T2: Sections 1-7 required. 8-10 recommended.
-T3: All sections required.
+T1: Sections 1-4, 6-7, 9 (Performance Targets only) required (if optional doc is included).
+T2: Sections 1-7, 9 (Performance Targets + Scaling Strategy) required. 8, 10 recommended.
+T3: All sections and subsections required.
 -->

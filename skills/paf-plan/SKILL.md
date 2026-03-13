@@ -38,6 +38,8 @@ Walk every design document and extract every buildable component:
 | Frontend Architecture | Design system setup, component library, API client → task(s) |
 | Operational | CI/CD pipeline, Docker images, monitoring → task(s) |
 
+**T1 note:** At T1, most of these source documents won't exist. Extract tasks from whatever documents are available — typically Root Architecture (service boundaries, deployment, tech stack setup) and Decision Log (each decision with implementation implications). If Backend Architecture or API Specification were optionally included, extract from those too. The dependency mapping (§2) still applies; you'll just have fewer entry points.
+
 ### 2. Dependency Mapping
 
 Order components by what must exist before other things can be built:
@@ -128,6 +130,7 @@ Use the `superpowers:writing-plans` skill format for task structure — that ski
 - [ ] Sprint grouping reviewed by user
 - [ ] Estimation reviewed (sanity check)
 - [ ] Plan saved
+- [ ] **Declaration: "Plan is execution-ready"**
 
 ### 10. Handoff
 

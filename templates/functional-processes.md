@@ -64,8 +64,34 @@ tags: []
 2. {step}
 3. {step}
 
+<!-- [T2+] Sequence diagram showing actor interactions for this process: -->
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant API as {API Layer}
+    participant Svc as {Service}
+    participant DB as {Database}
+    User->>API: {action}
+    API->>Svc: {call}
+    Svc->>DB: {query}
+    DB-->>Svc: {result}
+    Svc-->>API: {response}
+    API-->>User: {result}
+```
+
 **State Transitions:**
 <!-- [T2+] State machine diagram if applicable -->
+
+```mermaid
+stateDiagram-v2
+    [*] --> {InitialState}
+    {InitialState} --> {ActiveState}: {trigger}
+    {ActiveState} --> {CompletedState}: {trigger}
+    {ActiveState} --> {ErrorState}: {failure condition}
+    {ErrorState} --> {ActiveState}: {retry}
+    {CompletedState} --> [*]
+```
 
 **Error Handling:**
 <!-- What happens on failure? Retry? Escalate? Fail-closed? -->
@@ -82,6 +108,16 @@ tags: []
 **States:** {draft → active → paused → retired}
 **Transitions:** {what triggers each transition}
 
+```mermaid
+stateDiagram-v2
+    [*] --> Draft: created
+    Draft --> Active: {publish / approve}
+    Active --> Paused: {suspend}
+    Paused --> Active: {resume}
+    Active --> Retired: {delete / expire}
+    Retired --> [*]
+```
+
 ---
 
 ## 5. Scheduled Operations
@@ -97,6 +133,17 @@ tags: []
 ## 6. Data Flows
 
 <!-- [T3] How data moves through the system. Input → processing → output → storage. -->
+
+```mermaid
+graph LR
+    Input["{Input Source}"] --> Ingest["{Ingestion}"]
+    Ingest --> Process["{Processing}"]
+    Process --> Store[("{Storage}")]
+    Process --> Output["{Output / API}"]
+    Store --> Output
+```
+
+<!-- Repeat or expand for each major data flow. Show transformations, validation points, and where data is persisted. -->
 
 ---
 

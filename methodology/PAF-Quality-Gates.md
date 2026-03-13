@@ -54,9 +54,10 @@ For phase context, see [PAF-Phase-Guide.md](PAF-Phase-Guide.md) §P4.
 **Procedure:**
 1. Extract all D-{number} entries from the Decision Log
 2. For each decision, read its "Distribute To" list
-3. Verify that each target document contains a reference to the decision (explicit citation or the decision's content is reflected)
+3. **Skip targets for documents not produced at this tier** (e.g., if a decision targets Backend Architecture but it was not included). Record as "skipped — document not in scope."
+4. Verify that each remaining target document contains a reference to the decision (explicit citation or the decision's content is reflected)
 
-**Evidence:** Table of decisions with distribution status (distributed / missing).
+**Evidence:** Table of decisions with distribution status (distributed / missing / skipped).
 
 ### G3: Taxonomy Completeness
 
@@ -64,8 +65,9 @@ For phase context, see [PAF-Phase-Guide.md](PAF-Phase-Guide.md) §P4.
 
 **Procedure:**
 1. Look up the tier's required document types in [PAF-Document-Taxonomy.md](PAF-Document-Taxonomy.md)
-2. Verify each required type has a corresponding document in the corpus
-3. Verify each document has substantive content (not just frontmatter and headings)
+2. **Exclude P5 artifacts** (Implementation Plan) — these are validated at P5 exit, not during P4
+3. Verify each remaining required type has a corresponding document in the corpus
+4. Verify each document has substantive content (not just frontmatter and headings)
 
 **Evidence:** Table of required types with existence and substantiveness check.
 
@@ -97,11 +99,16 @@ For phase context, see [PAF-Phase-Guide.md](PAF-Phase-Guide.md) §P4.
 | Tokens ↔ Frontend | UI Design ↔ Frontend Architecture ↔ secondary UI docs | Hex color values, spacing values, typography specs, motion curves |
 | Config ↔ Docs | Backend Architecture ↔ Functional Processes ↔ Operational | Config key names, default values, environment variable names |
 | Terminology ↔ All | Domain pack glossary (if exists) ↔ every document | Same term has same meaning everywhere |
+| Glossary ↔ All | Decision Log (Product Glossary) ↔ every document | Product-specific terms used consistently; no synonyms or variant spellings |
+| Quality Attrs ↔ Impl | Root Architecture §8 ↔ Backend Architecture §9 | Performance targets, availability goals, and security targets match between high-level and detailed specs |
+| Principles ↔ Decisions | Root Architecture §6 ↔ Decision Log, all architecture docs | No decision or design pattern contradicts a stated architecture principle |
+| Cross-Cutting ↔ Refs | Root Architecture §11 ↔ documents listed in "Defined In" / "Enforced By" | Each cross-cutting concern is addressed in every document that claims to enforce it |
 
 **Procedure** for each check:
-1. Extract the contract values from the defining document
-2. Search all referencing documents for the same values
-3. Flag any discrepancy (different value, missing reference, or conflicting definition)
+1. Verify all referenced documents exist — **skip the check if any referenced document was not produced at this tier** (e.g., skip Auth ↔ Everything if Security Architecture doesn't exist). Record as "skipped — document not in scope" in the completeness report.
+2. Extract the contract values from the defining document
+3. Search all referencing documents for the same values
+4. Flag any discrepancy (different value, missing reference, or conflicting definition)
 
 Domain packs may inject additional checks specific to the domain.
 
@@ -186,6 +193,10 @@ The P4 exit artifact. Create this document using the template below:
 | Tokens ↔ Frontend | {docs} | {consistent/minor/contradiction} | {detail} |
 | Config ↔ Docs | {docs} | {consistent/minor/contradiction} | {detail} |
 | Terminology ↔ All | {docs} | {consistent/minor/contradiction} | {detail} |
+| Glossary ↔ All | {docs} | {consistent/minor/contradiction} | {detail} |
+| Quality Attrs ↔ Impl | {docs} | {consistent/minor/contradiction} | {detail} |
+| Principles ↔ Decisions | {docs} | {consistent/minor/contradiction} | {detail} |
+| Cross-Cutting ↔ Refs | {docs} | {consistent/minor/contradiction} | {detail} |
 
 ## 3. Gaps Identified
 
@@ -219,4 +230,4 @@ When a gate fails:
 5. **Record** — update the Completeness Report with resolution details
 6. **Repeat** — until all required gates pass
 
-**Escalation:** If a finding cannot be resolved without architectural changes, it becomes a new Decision Record entry and flows back through P3 (affected documents only) → P4 (re-run gates).
+**Escalation:** If a finding cannot be resolved without architectural changes, it becomes a new Decision Log entry and flows back through P3 (affected documents only) → P4 (re-run gates).

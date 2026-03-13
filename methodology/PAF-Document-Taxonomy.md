@@ -20,6 +20,8 @@ This document defines the complete set of document types in a PAF design corpus 
 | **Completeness Report** | Cross-document consistency audit, gap analysis, status promotion | Skip | Optional | Required |
 | **Design Library** | Document governance: frontmatter spec, naming convention, dependency graph, index | Skip | Skip | Required |
 | **Canonical Specs** | Machine-readable source of truth (OpenAPI, JSON Schema, DDL) | Skip | Optional | Required |
+| **Intake Brief** | Product identity, complexity assessment, scope boundaries (P1 artifact) | Required | Required | Required |
+| **Implementation Plan** | Sprint-structured TDD tasks with effort estimates (P5 artifact) | Required | Required | Required |
 
 ### Reading the Table
 
@@ -50,6 +52,8 @@ Layer 4: Operational (Testing, Observability, Release)
 
 **The Decision Log is not layered** — it is written continuously throughout P2 and P3 as decisions are made. It accumulates rather than completing at a specific layer.
 
+**The Intake Brief and Implementation Plan are not layered** — they are produced in P1 and P5 respectively, outside the P3 authoring cycle. They appear in the taxonomy for G1 (metadata integrity) validation. G3 (taxonomy completeness) during P4 checks only P1–P3 artifacts; the Implementation Plan is validated at P5 exit, not during P4.
+
 ### Why This Order
 
 Each layer depends on the layers above it:
@@ -66,12 +70,12 @@ Each layer depends on the layers above it:
 ## Document Type Details
 
 ### Root Architecture
-The first document written for any product. Covers: product identity, problem statement, target users, deployment model, component overview, key architectural decisions, technology choices, and release roadmap. This is the single document someone reads to understand what the product is and how it works at a high level.
+The first document written for any product. Covers: product identity, stakeholders (T2+), system context and component diagrams (Mermaid), deployment model and topology, technology stack, architecture principles, key decisions, quality attributes with measurable targets, data model overview, security model, cross-cutting concerns, integration points, release roadmap, constraints and assumptions, and risks/technical debt (T2+). This is the single document someone reads to understand what the product is and how it works at a high level.
 
 **Typical length:** T1: 200–500 lines. T2: 500–1,000 lines. T3: 800–1,500 lines.
 
 ### Functional Processes
-Describes how the system behaves — not what components exist, but what they do. Covers: installation flows, configuration, runtime processes, lifecycle management (start/stop/upgrade), user-facing workflows, state machines, data flows, and error recovery paths.
+Describes how the system behaves — not what components exist, but what they do. Covers: installation flows, configuration, runtime processes (with sequence diagrams, T2+), lifecycle management with state machine diagrams (T2+), scheduled operations, and data flows with flow diagrams (T3). All behavioral diagrams use Mermaid scaffolds.
 
 **Why Layer 1:** Everything downstream depends on understanding the processes. You cannot design an API without knowing what operations the system supports. You cannot write security constraints without knowing what actions need governing.
 
@@ -88,7 +92,7 @@ Architectural decisions for the frontend. Covers: framework choice (with rationa
 **Typical length:** T2: 300–600 lines. T3: 600–1,200 lines.
 
 ### Backend Architecture
-Implementation architecture for the backend. Covers: language/runtime choice, binary/service structure, database schema (DDL or ERD), package/module layout, IPC protocol (if multi-process), configuration loading, error handling strategy, and performance targets.
+Implementation architecture for the backend. Covers: language/runtime choice, binary/service structure, database schema (DDL or ERD), package/module layout, IPC protocol (if multi-process), configuration loading, error handling strategy, performance & scaling (targets, scaling strategy per component at T2+, capacity planning at T3), and migration strategy.
 
 **Typical length:** T1: 200–400 lines. T2: 500–1,500 lines. T3: 1,500–3,000 lines.
 
@@ -114,7 +118,7 @@ Cross-cutting operational concerns. May be a single document or split into separ
 **Typical length:** T2: 300–600 lines (combined). T3: 500–1,000 lines per document.
 
 ### Decision Log
-A chronological record of design decisions made during P2 and P3. Each entry follows a structured format (see [PAF-Phase-Guide.md](PAF-Phase-Guide.md) §P2 for the format). The "Distribute To" field in each entry creates a traceable chain from decision to document section.
+A chronological record of design decisions made during P2 and P3. Each entry follows a structured format (see [PAF-Phase-Guide.md](PAF-Phase-Guide.md) §P2 for the format). The "Distribute To" field in each entry creates a traceable chain from decision to document section. Includes a Product Glossary (T2+) for product-specific terms — distinct from domain pack terminology. G5 checks glossary terms for consistent usage across all documents.
 
 **Typical length:** Scales with product complexity. T2: 10–20 entries. T3: 25–50+ entries.
 
@@ -156,7 +160,7 @@ tags: []                   # Freeform keywords, lowercase, hyphenated
 ### Field Notes
 
 - **domain**: Works for architectural planes, bounded contexts, services, or modules. Examples: `"core"`, `"data-plane"`, `"billing-service"`, `"shared"`.
-- **category**: Must match one of the document types from the taxonomy table (lowercase, hyphenated: `root-architecture`, `functional-processes`, `ui-design`, `frontend-architecture`, `backend-architecture`, `api-specification`, `security-architecture`, `operational`, `decision-log`, `completeness-report`, `design-library`, `canonical-specs`).
+- **category**: Must match one of the document types from the taxonomy table (lowercase, hyphenated: `root-architecture`, `functional-processes`, `ui-design`, `frontend-architecture`, `backend-architecture`, `api-specification`, `security-architecture`, `operational`, `decision-log`, `completeness-report`, `design-library`, `canonical-specs`, `intake-brief`, `implementation-plan`).
 - **parent**: The filename (not path) of this document's parent in the dependency hierarchy. Root Architecture documents use `~` (YAML null).
 - **depends_on**: List of filenames this document explicitly references or depends on for context. Keep accurate — this powers cross-reference validation in P4.
 - **status**: Documents start as `draft`, progress to `review` when complete, and reach `approved` after passing P4 quality gates.

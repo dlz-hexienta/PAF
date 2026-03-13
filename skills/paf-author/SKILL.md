@@ -43,7 +43,8 @@ For each required document, in dependency layer order:
    - Other `{filename}` references → actual filenames
 3. If a domain pack matched, read its `document_section_templates` for this category and inject additional sections into the scaffold
 4. Apply tier adjustments — remove sections marked for higher tiers (noted in template comments)
-5. Save the scaffold to `docs/design/{product}-{document-type}.md`
+5. Strip `depends_on` entries that reference documents not produced at this tier (e.g., remove `{functional-processes-filename}` from Backend Architecture if Functional Processes was not included)
+6. Save the scaffold to `docs/design/{product}-{document-type}.md`
 
 ### 3. Author Documents in Layer Order
 
@@ -75,7 +76,34 @@ For each document:
 
 **e. Self-check** — Read the document end-to-end. Fix contradictions, fill placeholders, resolve undefined terms.
 
-**f. Set status** — Mark as `draft` in the frontmatter.
+**f. Author diagrams** — Templates include Mermaid diagram scaffolds with `{placeholder}` values. Replace placeholders with actual component/entity names. Diagram requirements by tier:
+
+| Diagram Type | Where | T1 | T2 | T3 |
+|-------------|-------|:---:|:---:|:---:|
+| System Context (`graph LR`) | Root Architecture §3 | Required | Required | Required |
+| Component Interaction (`graph TD`) | Root Architecture §3 | Skip | Required | Required |
+| Deployment Topology (`graph TD`) | Root Architecture §4 | Skip | Optional | Required |
+| Sequence diagrams | Functional Processes §3 | Skip | Required | Required |
+| State diagrams | Functional Processes §3, §4 | Skip | Required | Required |
+| Data Flow (`graph LR`) | Functional Processes §6 | Skip | Skip | Required |
+| Entity-Relationship | Backend Architecture §4 | Skip | Optional | Required |
+
+Skip diagram types above the product's tier. Don't add diagrams that aren't in the template scaffolds.
+
+**Diagram preview:** Mermaid renders natively on GitHub and in IDE Markdown preview. For CLI-only workflows, users can paste into mermaid.live or use `mmdc` to export SVG/PNG — see `docs/paf/methodology/PAF-Tooling-Guide.md` §Diagram Rendering.
+
+**g. Populate P2-sourced sections** — Several Root Architecture sections draw directly from P2 artifacts:
+
+| Section | Source | Tier |
+|---------|--------|:----:|
+| §2 Stakeholders | Intake brief stakeholder table | T2+ |
+| §6 Architecture Principles | Principles captured in P2 §5 | T2+ |
+| §8 Quality Attributes | SMART targets from P2 decisions | All |
+| §11 Cross-Cutting Concerns | Patterns that emerged across multiple P2 categories | T2+ |
+
+If P2 didn't produce principles or glossary entries (common for T1), leave those sections minimal or skip per tier guidance.
+
+**h. Set status** — Mark as `draft` in the frontmatter.
 
 ### 4. Present Each Document for Review
 
@@ -90,6 +118,10 @@ Incorporate feedback before proceeding to the next layer.
 
 New decisions will arise during authoring. Record them in the Decision Log using the same D-{number} format with "Distribute To" targets.
 
+After scaffolding the Root Architecture (Layer 0), update the Decision Log's YAML frontmatter to point to it:
+- Set `parent` to the Root Architecture filename
+- Set `depends_on` to include the Root Architecture filename
+
 ### 6. Operational Document Split (T3)
 
 Per the taxonomy, T3 products split the Operational document into 2–3 separate documents:
@@ -99,7 +131,7 @@ Per the taxonomy, T3 products split the Operational document into 2–3 separate
 
 Scaffold each from the relevant sections of `docs/paf/templates/operational.md`. Each gets its own YAML frontmatter with `category: operational` and a distinguishing `tags` entry.
 
-T1–T2 products use a single `{product}-operational.md` document.
+T2 products use a single `{product}-operational.md` document. T1 skips Operational entirely.
 
 ### 7. Multi-Domain Authoring (T3)
 

@@ -39,30 +39,37 @@ Execute each required gate following the procedures in PAF-Quality-Gates.md:
 
 **G2: Decision Coverage** (all tiers)
 - Read all D-{number} entries from the Decision Log
-- For each, verify its "Distribute To" targets contain the decision content
+- Skip targets for documents not produced at this tier (record as "skipped — document not in scope")
+- For each remaining target, verify it contains the decision content
 
 **G3: Taxonomy Completeness** (all tiers)
 - Look up required document types for the tier
-- Verify each exists and has substantive content
+- Exclude P5 artifacts (Implementation Plan) — validated at P5 exit, not during P4
+- Verify each remaining required type exists and has substantive content
 
 **G4: Internal Consistency** (T2+)
 - Read each document end-to-end
 - Check for self-contradictions (prose vs. tables, numbers that differ between sections)
 
 **G5: Cross-Document Consistency** (T2+)
-- Run each check from the consistency check table in PAF-Quality-Gates.md:
+- For each check below, first verify all referenced documents exist. **Skip the check if a referenced document was not produced at this tier** (e.g., skip Auth ↔ Everything if Security Architecture doesn't exist). Record skipped checks as "skipped — document not in scope."
+- Run each applicable check from the consistency check table in PAF-Quality-Gates.md:
   - Schema ↔ API
   - Auth ↔ Everything
   - Process ↔ API
   - Tokens ↔ Frontend
   - Config ↔ Docs
   - Terminology ↔ All
+  - Glossary ↔ All — product-specific terms from Decision Log glossary used consistently; no synonyms or variant spellings
+  - Quality Attrs ↔ Impl — Root Architecture §8 targets match Backend Architecture §9 performance/scaling specs
+  - Principles ↔ Decisions — no decision or design pattern contradicts a stated architecture principle (Root Architecture §6)
+  - Cross-Cutting ↔ Refs — each concern in Root Architecture §11 is addressed in every document listed in its "Defined In" / "Enforced By" columns
 - If a domain pack has `quality_checks`, run those too
 
-**G6: Bidirectional References** (T3)
+**G6: Bidirectional References** (T3 required; T2 ask user: "Would you like to run optional reference checks?")
 - For each depends_on relationship A → B, verify B acknowledges A
 
-**G7: Version Gate Alignment** (T3)
+**G7: Version Gate Alignment** (T3 required; T2 ask user: "Would you like to verify version gate consistency?")
 - Verify deferred features are consistently marked across all documents
 
 **G8: Gap Analysis** (T2+)
@@ -70,9 +77,11 @@ Execute each required gate following the procedures in PAF-Quality-Gates.md:
 
 ### 3. Record Findings
 
-Save to `docs/design/completeness-report.md` using the template from `docs/paf/templates/completeness-report.md`. Fill in:
+**T1:** Record G1–G3 results inline (no separate completeness report). Present pass/fail summary to the user directly.
+
+**T2+:** Save to `docs/design/completeness-report.md` using the template from `docs/paf/templates/completeness-report.md`. Fill in:
 - Gate results table
-- Consistency findings table
+- Consistency findings table (mark skipped checks for documents not in scope)
 - Gaps identified table
 - Status promotion recommendations
 
@@ -98,8 +107,9 @@ Once all gates pass, promote document statuses:
 - [ ] All required gates pass for the assigned tier
 - [ ] Zero critical gaps remaining
 - [ ] Zero cross-document contradictions
-- [ ] Completeness report finalized and saved
+- [ ] Results recorded (T1: inline summary; T2+: completeness report finalized and saved)
 - [ ] All documents promoted to `review` or `approved`
+- [ ] **Declaration: "Design corpus is implementation-ready"**
 
 ### 7. Handoff
 

@@ -75,27 +75,38 @@ Score each signal against the tier thresholds:
 Ask: "What must be in v1, and what can be deferred?"
 Document the answer as version gates (v1.0, future, out of scope).
 
-### 5. Decomposition Check (T3 only)
+### 5. Stakeholder Identification (T2+)
+
+Ask: "Who are the key stakeholders for this product and what is each one's primary concern?"
+
+Capture as a table:
+
+| Role | Key Concern | Reviews |
+|------|------------|---------|
+| {e.g., Product Owner} | {e.g., feature completeness} | {e.g., Root Architecture, Functional Processes} |
+
+This feeds Root Architecture §2 (Stakeholders). For T1, skip — the user is typically the sole stakeholder.
+
+### 6. Decomposition Check (T3 only)
 
 If T3, ask: "Could any of these components be deployed and used independently, serve different user bases, or ship on different release schedules?"
 
 If yes, suggest decomposition into sub-products. Each gets its own P1–P6 cycle.
 
-### 6. Produce Intake Brief
+### 7. Produce Intake Brief
 
-Create the intake brief as a Markdown document. Save to `docs/design/intake-brief.md`.
+Scaffold the intake brief from `docs/paf/templates/intake-brief.md`. Replace placeholders with the user's answers. Include YAML frontmatter (required for G1 metadata checks). Strip sections marked for higher tiers (e.g., remove §4 Stakeholders for T1 — see tier guidance in the template). Save to `docs/design/intake-brief.md`.
 
-Structure: Core Identity answers, Complexity Signals table with tier scoring, Scope Boundaries (v1/future/out-of-scope), and Domain Pack match (if any).
-
-### 7. Exit Gate Checklist
+### 8. Exit Gate Checklist
 
 Before handing off, verify:
 - [ ] Intake brief complete (all questions answered)
 - [ ] Complexity tier assigned and confirmed by user
 - [ ] Scope boundaries documented (v1 vs. deferred)
+- [ ] Stakeholder table captured (T2+)
 - [ ] If T3: decomposition check passed
 
-### 8. Handoff
+### 9. Handoff
 
 Announce: "P1 complete." Present a summary of tier assignment and scope boundaries.
 Ask: "Ready to proceed to P2 (Requirements)? If you need time to review, you can resume later with `/paf-requirements`."
